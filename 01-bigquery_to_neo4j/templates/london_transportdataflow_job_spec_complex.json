@@ -84,7 +84,7 @@
       {
         "source": "tube_lines",
         "name": "Tube Lines",
-        "query": "UNWIND $rows as row MATCH (a:Station) WHERE a.name = row.From_Station MATCH (b:Station) WHERE b.name = row.To_Station CREATE (a)-[r:CONNECTED_TO]->(b) SET r.line = row.Tube_Line",
+        "query": "UNWIND $rows as row MATCH (a:Station), (b:Station) WHERE a.name = row.From_Station AND b.name = row.To_Station CALL apoc.create.relationship(a, toUpper(row.Tube_Line), {}, b) YIELD rel as rel1 CALL apoc.create.relationship(b, toUpper(row.Tube_Line), {}, a) YIELD rel as rel2 RETURN rel1, rel2",
         "depends_on": [
           "Station"
         ]
